@@ -7,6 +7,8 @@ import info.hb.cnn.core.Layer.Size;
 import info.hb.cnn.data.DataSet;
 import info.hb.cnn.utils.ConcurentRunner;
 
+import java.io.IOException;
+
 public class CNNSpeech {
 
 	private static final String MODEL_NAME = "speech/model/model.cnn";
@@ -42,13 +44,22 @@ public class CNNSpeech {
 		// 开始训练模型
 		cnn.train(dataset, 3);
 		// 保存训练好的模型
-		cnn.saveModel(MODEL_NAME);
+		try {
+			cnn.saveModel(MODEL_NAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		dataset.clear();
 	}
 
 	public static void runTest() {
 		// 加载训练好的模型
-		CNN cnn = CNN.loadModel(MODEL_NAME);
+		CNN cnn = null;
+		try {
+			cnn = CNN.loadModel(MODEL_NAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		// 加载测试数据
 		DataSet testSet = DataSet.load(TEST_DATA, ",", -1);
 		// 预测结果

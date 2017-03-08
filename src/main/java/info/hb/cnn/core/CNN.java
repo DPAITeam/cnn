@@ -562,8 +562,11 @@ public class CNN implements Serializable {
 
 	}
 
-	public void saveModel(String fileName) {
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));) {
+	public void saveModel(String fileName) throws IOException {
+		File file=new File(fileName);
+		if(!file.exists())
+			file.createNewFile();
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));) {
 			oos.writeObject(this);
 			oos.flush();
 		} catch (IOException e) {
@@ -572,7 +575,10 @@ public class CNN implements Serializable {
 		}
 	}
 
-	public static CNN loadModel(String fileName) {
+	public static CNN loadModel(String fileName) throws IOException {
+		File file=new File(fileName);
+		if(!file.exists())
+			file.createNewFile();
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));) {
 			CNN cnn = (CNN) in.readObject();
 			return cnn;
